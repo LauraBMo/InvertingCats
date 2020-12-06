@@ -6,7 +6,7 @@ The code we present here involves two essential steps to understand the relation
 *Computing the ML-degree*
 (Section 4)
 
-Julia computations in ..., using the package LinearCovarianceModels.jl, provides an efficient procedure to compute the ML-degree of Cat(2,3). This value is 36. In fact, this can be used to compute the ML-degree of any space Cat(k,n+1) of catalecticant matrices of (n+1)-ary forms of degree 2k. 
+Julia code in MLDegreeTernaryQuartics.jl, using the package LinearCovarianceModels.jl, provides an efficient procedure to compute the ML-degree of Cat(2,3). This value is 36. In fact, this can be used to compute the ML-degree of any space Cat(k,n+1) of catalecticant matrices of (n+1)-ary forms of degree 2k. 
 
 The Macaulay2 code in MLdegree.m2 presents a symbolic aproach to the same calculation. However, it only provides an actual answer for spaces of catalecticant matrices associated to binary forms of small degree.
 
