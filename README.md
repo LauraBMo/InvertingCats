@@ -13,4 +13,4 @@ The Macaulay2 code in [MLdegree.m2](https://github.com/LauraBMo/InvertingCats/bl
 **Understanding the locus of rank 2 matrices**
 (*Lemma 3.4 and Proposition 4.4*)
 
-Macaulay2 computations in [Rank2Locus.m2](https://github.com/LauraBMo/InvertingCats/blob/main/src/MLdegree.m2) allow us to prove that the dimension of the rank 2 locus of the inversion map is exactly 12 (Lemma 3.4) and that it intersects the orthogonal of Cat(2,3) (Proposition 4.4). Therefore, the degree of the reciprocal variety of Cat(2,3) has 36 as a strict lower bound.
+Macaulay2 computations in [Rank2Locus.m2](https://github.com/LauraBMo/InvertingCats/blob/main/src/Rank2Locus.m2) allow us to prove that the dimension of the rank 2 locus of the inversion map is exactly 12 (Lemma 3.4) and that it intersects the orthogonal of Cat(2,3) (Proposition 4.4). Therefore, the degree of the reciprocal variety of Cat(2,3) has 36 as a strict lower bound.
