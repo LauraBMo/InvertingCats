@@ -12,7 +12,8 @@ The Macaulay2 code in [MLdegree.m2](https://github.com/LauraBMo/InvertingCats/bl
 
 **Computing the degree**
 (*Section 2*)
-Homotopy continuation techniques allow us to compute the degree of the reciprocal varieties of catalecticant matrices associated to binary forms of small degree and ternary quartics.  
+
+Homotopy continuation techniques allow us to compute the degree of the reciprocal varieties of catalecticant matrices associated to binary forms of small degree and ternary quartics. We use the Julia package [HomotopyContinuation.jl](https://www.juliahomotopycontinuation.org/) to that purpose. 
 
 
 **Understanding the rank loci**
