@@ -1,5 +1,5 @@
 
-include("CatalecticantMatrices.jl")
+include("../Packages/CatalecticantMatrices.jl")
 
 ### Create the model
 Σ = Catalecticant(2, 3)

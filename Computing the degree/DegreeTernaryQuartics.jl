@@ -1,5 +1,5 @@
 # Load file for needed functions
-include("ReciprocalVariety.jl")
+include("../Packages/ReciprocalVariety.jl")
 
 
 # Basic setup. For ternary quartics: r=2, s=3
