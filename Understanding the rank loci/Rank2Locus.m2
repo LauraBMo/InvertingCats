@@ -7,7 +7,7 @@
 ----------------------------------------------------------------------------------------
 
 restart
-loadPackage "CatalecticantMatrices" 
+load "../Packages/CatalecticantMatrices.m2" 
 -- The package CatalecticantMatrices.m2 is required for the following functions:
 -- genericCatalecticantMatrix, adjugate
 

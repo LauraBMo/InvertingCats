@@ -8,7 +8,7 @@ newPackage(
              Name => "Elisa Cazzador", 
                 Email => "elisacaz@math.uio.no", 
              Name => "Roser Homs", 
-                Email => "roser.homs@tum.de", 		
+                Email => "roser.homs@tum.de" 		
 		}
             },
         Headline => "tools for catalecticant matrices"
