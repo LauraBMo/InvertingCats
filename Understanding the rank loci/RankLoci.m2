@@ -10,7 +10,7 @@ restart
 load "../Packages/CatalecticantMatrices.m2" 
 
 -- The package CatalecticantMatrices.m2 is required for the following functions:
--- genericCatalecticantMatrix, adjugate, parametrizedImage, toCat
+-- genericCatalecticantMatrix, adjugate, parametrizedImage, toCat, orthogonal
 
 
 ----------------------------------------------------------------------------------------
@@ -23,9 +23,9 @@ n = 2
 k = 2 
 
 -- Build generic catalecticant matrix in PCat(k,n+1) = P^N
-N = binomial(n+2*k,2*k)-1                    -- projective dimension of catalecticant space
+N = binomial(n+2*k,2*k)-1                  -- projective dimension of catalecticant space
 X = QQ[x_0..x_N]                           -- ring of catalecticant matrices
-cat=genericCatalecticantMatrix(k,n,X)      -- catalecticant matrix
+cat = genericCatalecticantMatrix(k,n,X)    -- catalecticant matrix
 
 -- Build generic symmetric matrix in PS^m = P^M
 m = binomial(k+n,k)                        -- size of catalecticant matrix
@@ -44,7 +44,7 @@ sym = genericSymmetricMatrix(Y,m)          -- symmetric matrix
 -- Parametrize the image of points in the rank-r open orbits for r=1..4 and in the 
 -- closed orbit of rank-2 points                                               
 
--- Points in P^2 to build the proper secants
+-- Points in P^2 to build the associated catalecticant from
 P={1,0,0}, Q={0,1,0}, R={0,0,1}, S={1,1,1}
 
 -- Representatives for the orbits
@@ -107,16 +107,15 @@ pfaffians(6, S2) == tangentCubic
 
 
 -- STEP 4
--- Case r=1. Check that the image of a rank-1 point  is an 11-fold embedded in a P^14
+-- Case r=1. Check that the image of a rank-1 point is an 11-fold embedded in a P^14
  
 -- We easily find 6 linear equations in the parametrization
-use Z
 paramRank1 = parametrizations_4
 PP14 = ideal(for i to 5 list paramRank1_i) 
 
 -- Intersect the parametrization with the pull-back of 11 random hyperplanes of PS^m
 use Z
-pullback11 = ideal flatten entries( -- equations of 11 random hyperplanes
+pullback11 = ideal flatten entries(
     random(QQ^11, QQ^21)*transpose(matrix{toList(y_0..y_M)}) 
     );
 intersec = paramRank1 + pullback11;
@@ -148,7 +147,7 @@ rk5ortho = orthoCat + ideal(det sym);
 rank sub(sym, Y/orthoCat)
 
 -- The orthogonal space is empty in rank 1 and 2
-dim ortho1-1, dim ortho2-1
+dim rk1ortho-1, dim rk2ortho-1
 
 -- Build a suitable Veronese surface and its secant and compare with loci of rank 3,4,5
 use Y
@@ -157,12 +156,12 @@ mat = matrix{
     {y_7, y_11, y_13},
     {y_12, y_13, y_18}
     }
-veronese = minors(2, mat)
+surface = minors(2, mat)
 secant = ideal det(mat)
 
-radical ortho3 == veronese + orthoCat
-radical ortho4 == secant + orthoCat
-radical ortho5 == secant + orthoCat
+radical rk3ortho == surface + orthoCat
+radical rk4ortho == secant + orthoCat
+radical rk5ortho == secant + orthoCat
 
 
 ---------------------------------------------------------------------------------------
