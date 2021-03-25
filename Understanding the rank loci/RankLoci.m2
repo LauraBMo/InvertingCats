@@ -7,7 +7,8 @@
 ----------------------------------------------------------------------------------------
 
 restart
-loadPackage "CatalecticantMatrices" 
+load "../Packages/CatalecticantMatrices.m2" 
+
 -- The package CatalecticantMatrices.m2 is required for the following functions:
 -- genericCatalecticantMatrix, adjugate
 
@@ -38,11 +39,6 @@ sym = genericSymmetricMatrix(Y,m)          -- symmetric matrix
 -- 8-fold in P^9 and an 11-fold in P^14 for r=4,3,2,1 respectively. We prove this     --
 -- using a parametrization deduced from LEMMA 3.4                                     --
 ----------------------------------------------------------------------------------------
-
--- Build ring of the parametrization, including the variable t
-Z = QQ[x_0..x_N,y_0..y_M,t] 
-
-cat = sub(cat,Z)
 
 -- Representative for the open orbit of rank-4 points,
 -- lying on the 4-secant to v4(1:0:0), v4(0:1:0), v4(0:0:1) and v4(1:1:1)
@@ -85,35 +81,16 @@ orbits = {rank4, rank3, rank2Secant, rank2Tangent, rank1};
 
 -- Build the list of parametrizations for each type of matrix A listed above.
 -- The parametrization is deduced from LEMMA 3.4
-parametrizations = {}; 
-for A in orbits do(
-    r := rank A;
-    line := A + t*cat;
-    imageLine := adjugate line; -- phi(A + t*Cat)
-    divImageLine := matrix(
-	for i to m-1 list (for j to m-1 list imageLine_(i,j) // 
-	    t^(m-r-1))
-	); -- divide all the entries by the maximum power of t dividing them
-    limit := sub(divImageLine, t=>0); -- set t=0
-    entriesLimit := flatten(
-	for i to m-1 list(
-	    for j from i to m-1 list limit_(i,j)
-	    )
-	);
-    parametrizePhiA := ideal(
-	for i to M list y_i - entriesLimit_i
-	); -- parametrization of phi(A)
-    parametrizations = parametrizations | {parametrizePhiA};
-    )
+Z = X**Y;
+parametrizations = for A in orbits list(
+    sub(parametrizedImage(A, cat, sym), Z)
+    );
 
 -- Build the list containing the defining equations for the image phi(A) for r>1
-equations = {}; 
-for i to 3 do(    
-        phiA := sub(
-	    eliminate(toList(x_0..x_N), parametrizations_i), 
-	    Y); -- takes about 10 minutes -- elimination to get equations
-        equations = equations | {phiA};
-	)
+use Z
+equations =  for i to 3 list(
+    sub(eliminate(toList(x_0..x_N), parametrizations_i), Y) -- takes about 10 minutes
+    );
 
 -- Print projective dimensions, degree and defining ideals of phi(A) when r > 1
 for E in equations do print (dim E - 1, degree E, E)
