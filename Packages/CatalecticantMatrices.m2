@@ -18,7 +18,9 @@ export {
     "adjugate",
     "genericCatalecticantMatrix",
     "parametrizedImage",
-    "symmetricEntries"
+    "symmetricEntries",
+    "veronese",
+    "toCatalecticant"
     }
 
 ----------------------------------------------------------------------------------------
@@ -102,7 +104,7 @@ export {
 --   * A, a matrix                                                                    --
 --   * m, the size of A                                                               --
 -- Output:                                                                            --
---   * entries of A in the upper triangular part                                      --
+--   * list of entries of A in the upper triangular part                              --
 ----------------------------------------------------------------------------------------   
   
   symmetricEntries = (A, m) -> (
@@ -125,7 +127,7 @@ export {
 --    * L, the generic element in the LSSM                                            --
 --    * S, the generic symmetric matrix of the same size of L                         --
 -- Output:                                                                            --
---    * parametrization of the image of p via the inversion map                       --
+--    * ideal of parametrization for the image of p via the inversion map             --
 ----------------------------------------------------------------------------------------
 
   parametrizedImage = (p, L, S) -> (
@@ -164,3 +166,51 @@ export {
     -- return the parametrization in the ring of the product
     sub(param, ring(L)**ring(S))
   )
+
+
+
+
+----------------------------------------------------------------------------------------
+-- VERONESE                                                                           --
+----------------------------------------------------------------------------------------
+-- Coordinates for the d-uple embedding of a point                                    --
+-- Input:                                                                             --
+--    * P, a list of rational numbers, corresponding to the coordinates of a point    --
+--    * d, the degree of the Veronese embedding                                       --
+-- Output:                                                                            --
+--    * a list of rational numbers, the coordinates of the d-uple embedding of P      --
+----------------------------------------------------------------------------------------
+
+  veronese = (P, d) -> (
+    l:=length(P)-1;
+    u:=symbol u;
+    U:=QQ[u_0..u_l];
+    dBasis:=first entries basis(d,U);
+    for monom in dBasis list(
+      sub(monom, for i to l list u_i=>P_i)
+      )
+  )
+
+
+
+----------------------------------------------------------------------------------------
+-- TO CATALECTICANT                                                                           --
+----------------------------------------------------------------------------------------
+-- Catalecticant matrix associated with the d-uple embedding of a point in P^N        --
+-- Input:                                                                             --
+--    * P, a list of rational numbers, corresponding to the coordinates of a point    --
+--    * d, the degree of the Veronese embedding                                       --
+-- Output:                                                                            --
+--    * the catalecticant matrix associated with the d-uple embedding of P            --
+----------------------------------------------------------------------------------------
+
+  toCatalecticant = (P, d) -> (
+    k:=d//2;
+    n:=length(P)-1;
+    x:=symbol x;
+    N:=binomial(n+2*k,2*k)-1;
+    X:=QQ[x_0..x_N];
+    cat:=genericCatalecticantMatrix(k,n,X);
+    veron:=veronese(P,d); 
+    sub(cat, for i to N list x_i=>veron_i)
+    )
