@@ -20,7 +20,7 @@ export {
     "parametrizedImage",
     "symmetricEntries",
     "veronese",
-    "toCatalecticant"
+    "toCat"
     }
 
 ----------------------------------------------------------------------------------------
@@ -194,7 +194,7 @@ export {
 
 
 ----------------------------------------------------------------------------------------
--- TO CATALECTICANT                                                                   --
+-- TO CAT                                                                             --
 ----------------------------------------------------------------------------------------
 -- Catalecticant matrix associated with the d-uple embedding of a point               --
 -- Input:                                                                             --
@@ -204,7 +204,7 @@ export {
 --    * the catalecticant matrix associated with the d-uple embedding of P            --
 ----------------------------------------------------------------------------------------
 
-  toCatalecticant = (P,d) -> (
+  toCat = (P,d) -> (
     k:=d//2;
     n:=length(P)-1;
     x:=symbol x;
