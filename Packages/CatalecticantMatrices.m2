@@ -204,7 +204,7 @@ export {
 --    * the catalecticant matrix associated with the d-uple embedding of P            --
 ----------------------------------------------------------------------------------------
 
-  toCat = (P,d) -> (
+  toCatalecticant = (P,d) -> (
     k:=d//2;
     n:=length(P)-1;
     x:=symbol x;
