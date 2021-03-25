@@ -10,12 +10,12 @@ include("../Packages/ReciprocalVariety.jl")
     M=binomial(m + 1, 2)
     @var x[0:2r, 0:2r, 0:2r],y[1:M]
 
-#Define ideal equations
+# Define ideal equations
     cat=CatalecticantIndices(r,s,m)
     adj=adjugate(Expression.(vec_to_sym(y,m)));
     eq=CatalecticantSpace(cat,adj,m);
 
-#Set up system
+# Set up system
     F = System(eq; variables=y);
 
 # Compute point on the variety
