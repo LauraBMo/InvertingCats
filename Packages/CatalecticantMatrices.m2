@@ -20,7 +20,8 @@ export {
     "parametrizedImage",
     "symmetricEntries",
     "veronese",
-    "toCat"
+    "toCat",
+    "orthogonal"
     }
 
 ----------------------------------------------------------------------------------------
@@ -182,10 +183,14 @@ export {
 ----------------------------------------------------------------------------------------
 
   veronese = (P, d) -> (
+    -- projective dimension of the space where P belongs to
     l:=length(P)-1;
+    -- the ring of the projective space of P
     u:=symbol u;
     U:=QQ[u_0..u_l];
+    -- list of degree-4 monomials in the variables of U
     dBasis:=first entries basis(d,U);
+    -- substitute the coordinates of P in the monomials
     for monom in dBasis list(
       sub(monom, for i to l list u_i=>P_i)
       )
@@ -205,12 +210,54 @@ export {
 ----------------------------------------------------------------------------------------
 
   toCat = (P,d) -> (
+    -- half of degree d, to build the generic catalecticant
     k:=d//2;
+    -- projective dimension of the space where P belongs to
     n:=length(P)-1;
+    -- ring of catalecticant matrices Cat(k,n)
     x:=symbol x;
     N:=binomial(n+2*k,2*k)-1;
     X:=QQ[x_0..x_N];
+    -- generic catalecticant matrix
     cat:=genericCatalecticantMatrix(k,n,X);
+    -- v_d(P), the d-uple embedding of P
     veron:=veronese(P,d); 
+    -- substitute the coordinates of v_d(P) in the entries of catalecticant matrix
     sub(cat, for i to N list x_i=>veron_i)
+    )
+
+
+----------------------------------------------------------------------------------------
+-- ORTHOGONAL                                                                         --
+----------------------------------------------------------------------------------------
+-- Orthogonal space to an LSSM                                                        --
+-- Input:                                                                             --
+--    * L, the generic matrix in the LSSM                                             --
+--    * S, the generic symmetric matrix of the same size                              --
+-- Output:                                                                            --
+--    * the ideal of the orthogonal space to L in the ring of S                       --
+----------------------------------------------------------------------------------------
+
+  orthogonal = (L,S) -> (
+    -- variables of L
+    varsL:=support L;
+    -- projective dimension of the space of L
+    N:=#(varsL)-1;
+    -- variables of S
+    varsS:=support S;
+    -- projective dimension of the sapce of S
+    M:=#(varsS)-1;
+    -- ring of the product, S-variables seen as coefficients
+    R:=QQ[varsS][varsL];
+    -- map  L and S in the ring R
+    M':=sub(M,R);
+    S':=sub(S,R);
+    -- trace of the product between M and S
+    traceProduct:=trace(M*S);
+    -- ideal of the orthogonal space to L
+    ortho:=trim ideal(for i to N list(
+      coefficient(x_i, traceProduct)
+      ));
+    -- map the orthogonal in the ring of S
+    sub (ortho, ring S)
     )
