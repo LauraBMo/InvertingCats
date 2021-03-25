@@ -19,4 +19,4 @@ Homotopy continuation techniques allow us to compute the degree of the reciproca
 **Understanding the rank loci**
 (*Sections 3 and 4*)
 
-Macaulay2 computations in [Rank2Locus.m2](https://github.com/LauraBMo/InvertingCats/blob/main/Understanding%20the%20rank%20loci/Rank2Locus.m2) allow us to prove that the dimension of the rank 2 locus of the inversion map is exactly 12 (Proposition 3.5) and that it intersects the orthogonal of Cat(2,3) (Proposition 4.5). Therefore, the degree of the reciprocal variety of Cat(2,3) has 36 as a strict lower bound.
+Macaulay2 computations in [RankLoci.m2](https://github.com/LauraBMo/InvertingCats/blob/main/Understanding%20the%20rank%20loci/RankLoci.m2) allow us to describe the image of a rank-r catalecticant matrix for any r=1,...,5 (Proposition 3.5) and its intersection with the orthogonal of Cat(2,3) (Proposition 4.5). In particular, since not all these interscetions are empty, the degree of the reciprocal variety must be strictly greater than the ML-degree of Cat(2,3).
