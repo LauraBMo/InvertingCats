@@ -10,7 +10,7 @@ restart
 load "../Packages/CatalecticantMatrices.m2" 
 
 -- The package CatalecticantMatrices.m2 is required for the following functions:
--- genericCatalecticantMatrix, adjugate
+-- genericCatalecticantMatrix, adjugate, parametrizedImage, toCat
 
 
 ----------------------------------------------------------------------------------------
@@ -40,66 +40,50 @@ sym = genericSymmetricMatrix(Y,m)          -- symmetric matrix
 -- using a parametrization deduced from LEMMA 3.4                                     --
 ----------------------------------------------------------------------------------------
 
--- Representative for the open orbit of rank-4 points,
--- lying on the 4-secant to v4(1:0:0), v4(0:1:0), v4(0:0:1) and v4(1:1:1)
-rank4 = sub(cat, join( 
-	{x_0=>2, x_10=>2, x_N=>2}, 
-	for i from 1 to 9 list x_i=>1,
-	for i from 11 to N-1 list x_i=>1  
-    ))
+-- STEP 1 
+-- Parametrize the image of points in the rank-r open orbits for r=1..4 and in the 
+-- closed orbit of rank-2 points                                               
 
--- Representative for the open orbit of rank-3 points
--- lying on the 4-secant to v4(1:0:0), v4(0:1:0) and v4(0:0:1)
-rank3 = sub(cat, join(
-	{x_0=>1, x_10=>1, x_N=>1}, 
-	for i from 1 to 9 list x_i=>0,
-	for i from 11 to N-1 list x_i=>0  
-    ))
+-- Points in P^2 to build the proper secants
+P={1,0,0}, Q={0,1,0}, R={0,0,1}, S={1,1,1}
 
--- Representative for the open orbit of rank-2 points on a proper secant
--- lying on the 2-secant to v4(1:0:0) and v4(0:0:1)
-rank2Secant = sub(cat, join(
-    {x_0=>1, x_N=>1}, 
-    for i from 1 to N-1 list x_i=>0 
-    ))
-
--- Representative for the closed orbit of rank-2 points on a tangent line 
--- lying on a tangent line to v4(1:0:0)
-rank2Tangent = sub(cat, join(
-    {x_0=>1, x_1=>1},
-    for i from 2 to N list x_i=>0
-    ))
-
--- Representative for the open orbit of rank-1 points 
--- v4(1:0:0)
-rank1 = sub(cat, join(
-    {x_0=>1},
-    for i from 1 to N list x_i=>0
-    ))
+-- Representatives for the orbits
+rank4 = toCat(P,4) + toCat(Q,4) + toCat(R,4) + toCat(S,4)
+rank3 = toCat(P,4) + toCat(Q,4) + toCat(R,4)
+rank2Secant = toCat(P,4) + toCat(R,4)
+rank2Tangent = sub(cat, join({x_0=>1, x_1=>1}, for i from 2 to N list x_i=>0 ))
+rank1 = toCat(P,4)
 
 orbits = {rank4, rank3, rank2Secant, rank2Tangent, rank1};
 
--- Build the list of parametrizations for each type of matrix A listed above.
--- The parametrization is deduced from LEMMA 3.4
+-- List of parametrizations for every orbit representative
 Z = X**Y;
 parametrizations = for A in orbits list(
     sub(parametrizedImage(A, cat, sym), Z)
     );
 
--- Build the list containing the defining equations for the image phi(A) for r>1
+
+-- STEP 2
+-- Use elimination to find equations for the point images when r>1
+-- and compute dimension and degree of the resulting varieties
+
 use Z
 equations =  for i to 3 list(
     sub(eliminate(toList(x_0..x_N), parametrizations_i), Y) -- takes about 10 minutes
     );
 
--- Print projective dimensions, degree and defining ideals of phi(A) when r > 1
 for E in equations do print (dim E - 1, degree E, E)
 
--- Compare the two classes of cubic 8-folds with the cubic Pfaffians of the two
--- skew-symmetric matrices S1 and S2
+
+-- STEP 3
+-- Check that the two classes of cubic 8-folds are the cubic Pfaffian of a 6x6 skew-
+-- symmetric matrix
+
+-- Two classes of cubics
 secantCubic = ideal (equations_2)_11
 tangentCubic = ideal (equations_3)_11
 
+-- Build skew-symmetric matrices
 use Y
 S1 = matrix{
     {0, 0, y_6, y_7, y_8, y_9},
@@ -109,7 +93,6 @@ S1 = matrix{
     {-y_8, -y_12, -y_15, -y_16, 0, 0},
     {-y_9, -y_13, -y_16, -y_18, 0, 0}
     }
-
 S2 = matrix{
     {0, 0, y_19, y_20, y_14, y_17},
     {0, 0, y_13, y_14, y_11, y_12},
@@ -122,18 +105,23 @@ S2 = matrix{
 pfaffians(6, S1) == secantCubic
 pfaffians(6, S2) == tangentCubic
 
--- When r=1, there are 6 easy linear equations in the parametrization of phi(A) 
+
+-- STEP 4
+-- Case r=1. Check that the image of a rank-1 point  is an 11-fold embedded in a P^14
+ 
+-- We easily find 6 linear equations in the parametrization
 use Z
 paramRank1 = parametrizations_4
-PP14 = ideal(for i to 5 list paramRank1_i) -- 6 linear equations 
+PP14 = ideal(for i to 5 list paramRank1_i) 
 
--- When r=1, the dimension of phi(A) is 11. We check this by intersecting the
--- parametrization of phi(A) with the pull-back of 11 random hyperplanes of PS^m
+-- Intersect the parametrization with the pull-back of 11 random hyperplanes of PS^m
 use Z
-H11 = ideal flatten entries( -- equations of 11 random hyperplanes
+pullback11 = ideal flatten entries( -- equations of 11 random hyperplanes
     random(QQ^11, QQ^21)*transpose(matrix{toList(y_0..y_M)}) 
     );
-intersec = paramRank1 + H11;
+intersec = paramRank1 + pullback11;
+
+-- After elimination, get a zero-dimensional variety
 elim = sub(
     eliminate(toList(x_0..x_N), intersec), 
     Y); -- takes approx. 30 minutes
@@ -146,26 +134,15 @@ dim elim-1, degree elim
 -- a cubic hypersurface, secant to the Veronese, in rank 4 and 5.                     --
 ----------------------------------------------------------------------------------------
 
--- Build "ring of PCat(2,3) x PS^m", where the y_i' are seen as coefficients
-XY = Y[x_0..x_N] 
-cat = sub(cat, XY);
-sym = sub(sym, XY);
-
--- Build orthogonal space to PCat(2,3) and its rank loci
-traceProduct = trace (cat*sym)
-orthoCat = trim ideal(
-    for i to N list(
-	sub(coefficient(x_i, traceProduct), Y)
-	)
-    ) 
+-- Build the orthogonal space to PCat(2,3) and its rank loci
+orthoCat = orthogonal(cat, sym)
 dim orthoCat-1
 
-sym = sub(sym, Y);
-ortho1 = orthoCat + minors(2, sym);
-ortho2 = orthoCat + minors(3, sym);
-ortho3 = orthoCat + minors(4, sym);
-ortho4 = orthoCat + minors(5, sym);
-ortho5 = orthoCat + ideal(det sym);
+rk1ortho = orthoCat + minors(2, sym);
+rk2ortho = orthoCat + minors(3, sym);
+rk3ortho = orthoCat + minors(4, sym);
+rk4ortho = orthoCat + minors(5, sym);
+rk5ortho = orthoCat + ideal(det sym);
 
 -- A general point in the orthogonal haas full rank
 rank sub(sym, Y/orthoCat)
@@ -173,12 +150,12 @@ rank sub(sym, Y/orthoCat)
 -- The orthogonal space is empty in rank 1 and 2
 dim ortho1-1, dim ortho2-1
 
--- Build Veronese surface and its secant and compare with loci of rank 3,4,5
+-- Build a suitable Veronese surface and its secant and compare with loci of rank 3,4,5
 use Y
 mat = matrix{
-    {y_18, y_13, y_12},
-    {y_13, y_11, y_7},
-    {y_12, y_7, y_6}
+    {y_6, y_7, y_12},
+    {y_7, y_11, y_13},
+    {y_12, y_13, y_18}
     }
 veronese = minors(2, mat)
 secant = ideal det(mat)
@@ -195,7 +172,6 @@ radical ortho5 == secant + orthoCat
 
 -- Ideal of the pull-back phi^*(PCat(2,3)) in PS^m
 use Y;
-sym = sub(sym, Y);
 pullbackCat = trim ideal(
     det submatrix'(sym, {0}, {3}) + det submatrix'(sym, {1}, {1}),
     det submatrix'(sym, {0}, {4}) + det submatrix'(sym, {1}, {2}), 
