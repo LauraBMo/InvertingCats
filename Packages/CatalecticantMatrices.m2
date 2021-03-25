@@ -250,11 +250,12 @@ export {
     -- ring of the product, S-variables seen as coefficients
     R:=QQ[varsS][varsL];
     -- map  L and S in the ring R
-    M':=sub(M,R);
+    L':=sub(L,R);
     S':=sub(S,R);
     -- trace of the product between M and S
-    traceProduct:=trace(M*S);
+    traceProduct:=trace(L'*S');
     -- ideal of the orthogonal space to L
+    use R;
     ortho:=trim ideal(for i to N list(
       coefficient(x_i, traceProduct)
       ));
