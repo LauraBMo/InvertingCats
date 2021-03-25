@@ -130,6 +130,7 @@ export {
 
   parametrizedImage = (p, L, S) -> (
     -- ring with variables of the LSSM, the symmetric space and an auxiliary t
+    t:=symbol t;
     R:=QQ[t]**(ring L)**(ring S);
     p':=sub(p,R);
     L':=sub(L,R);
