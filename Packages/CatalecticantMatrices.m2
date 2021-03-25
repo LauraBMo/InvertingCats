@@ -257,7 +257,7 @@ export {
     -- ideal of the orthogonal space to L
     use R;
     ortho:=trim ideal(for i to N list(
-      coefficient(x_i, traceProduct)
+      coefficient(varsL_i, traceProduct)
       ));
     -- map the orthogonal in the ring of S
     sub (ortho, ring S)
