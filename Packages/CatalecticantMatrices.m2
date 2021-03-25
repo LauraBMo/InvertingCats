@@ -194,9 +194,9 @@ export {
 
 
 ----------------------------------------------------------------------------------------
--- TO CATALECTICANT                                                                           --
+-- TO CATALECTICANT                                                                   --
 ----------------------------------------------------------------------------------------
--- Catalecticant matrix associated with the d-uple embedding of a point in P^N        --
+-- Catalecticant matrix associated with the d-uple embedding of a point               --
 -- Input:                                                                             --
 --    * P, a list of rational numbers, corresponding to the coordinates of a point    --
 --    * d, the degree of the Veronese embedding                                       --
@@ -204,7 +204,7 @@ export {
 --    * the catalecticant matrix associated with the d-uple embedding of P            --
 ----------------------------------------------------------------------------------------
 
-  toCatalecticant = (P, d) -> (
+  toCat = (P,d) -> (
     k:=d//2;
     n:=length(P)-1;
     x:=symbol x;
